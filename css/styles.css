@@ -1,0 +1,37 @@
+h1.titulo {
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: coral;
+}
+
+body {
+  background-color: peachpuff;
+}
+
+article {
+  align-self: auto;
+}
+
+img {
+  width: 300px;
+  margin-left: 39%;
+}
+
+h3 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: medium;
+  font-weight: lighter;
+  text-align: center;
+  color: tomato;
+}
+
+p {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-align: center;
+  color: tomato;
+}
+
+button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: 39%;
+}

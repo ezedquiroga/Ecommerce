@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./assets/Logo.png" type="image/x-icon" />
+    <title>Kundalini</title>
+    <script src="./app/data.js" defer></script>
+    <script src="./app/index.js" defer></script>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <header class="bg-pink-400 py-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <button id="botonCarrito" class="text-pink-800 hover:text-white">
+          🛒Carrito
+        </button>
+      </div>
+    </header>
+    <main>
+      <h1 class="titulo">Kundalini</h1>
+      <p>Velas 100% de soja y orgánicas</p>
+      <div class="catalogo" id="prod-container"></div>
+      <aside id="seleccionados"></aside>
+    </main>
+    <aside id="carritoAside">
+      <div>
+        <h2>Mis productos</h2>
+        <ul id="carritoItems"></ul>
+        <button id="cerrarCarrito">Cerrar</button>
+      </div>
+    </aside>
+  </body>
+</html>
