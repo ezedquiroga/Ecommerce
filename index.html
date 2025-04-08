@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./assets/Logo.png" type="image/x-icon" />
     <title>Kundalini</title>
+
+    <!-- Librería de MercadoPago -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <!-- Scripts del proyecto -->
     <script src="./app/data.js" defer></script>
     <script src="./app/index.js" defer></script>
+
+    <!-- Estilos -->
     <link rel="stylesheet" href="./css/styles.css" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
@@ -14,16 +21,23 @@
     <header class="bg-pink-400 py-4">
       <div class="container mx-auto flex justify-between items-center">
         <button id="botonCarrito" class="text-pink-800 hover:text-white">
-          🛒Carrito
+          🛒 Carrito
         </button>
       </div>
     </header>
+
     <main>
       <h1 class="titulo">Kundalini</h1>
       <p>Velas 100% de soja y orgánicas</p>
+
+      <!-- Contenedor de productos -->
       <div class="catalogo" id="prod-container"></div>
+
+      <!-- Carrito -->
       <aside id="seleccionados"></aside>
     </main>
+
+    <!-- Sidebar del carrito -->
     <aside id="carritoAside">
       <div>
         <h2>Mis productos</h2>
@@ -31,5 +45,8 @@
         <button id="cerrarCarrito">Cerrar</button>
       </div>
     </aside>
+
+    <!-- Botón de pago con MercadoPago -->
+    <button id="checkoutButton" class="btn-checkout">Comprar Todo</button>
   </body>
 </html>

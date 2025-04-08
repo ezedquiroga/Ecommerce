@@ -4,6 +4,10 @@ h1.titulo {
   color: coral;
 }
 
+#botonCarrito {
+  align-items: flex-start;
+}
+
 body {
   background-color: peachpuff;
 }
@@ -15,6 +19,10 @@ article {
 img {
   width: 300px;
   margin-left: 39%;
+}
+
+h2 {
+  text-align: center;
 }
 
 h3 {
