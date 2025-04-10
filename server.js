@@ -41,14 +41,16 @@ app.post("/cart/add", (req, res) => {
 });
 
 app.post("/checkout", async (req, res) => {
-  if (carrito.length === 0) {
+  const carritoCliente = req.body.carrito;
+
+  if (!carritoCliente || carritoCliente.length === 0) {
     return res.status(400).json({ error: "El carrito está vacío" });
   }
 
   const preference = {
-    items: carrito.map(producto => ({
+    items: carritoCliente.map(producto => ({
       title: producto.nombre,
-      unit_price: parseFloat(producto.precio),
+      unit_price: producto.precio,
       quantity: producto.cantidad,
       currency_id: "ARS"
     })),
@@ -62,7 +64,6 @@ app.post("/checkout", async (req, res) => {
 
   try {
     const response = await mercadopago.preferences.create(preference);
-    carrito = [];
     res.json({ init_point: response.body.init_point });
   } catch (error) {
     console.error("Error al crear preferencia:", error);
@@ -72,6 +73,18 @@ app.post("/checkout", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.get("/success", (req, res) => {
+  res.sendFile(path.join(__dirname, "success.html"));
+});
+
+app.get("/failure", (req, res) => {
+  res.sendFile(path.join(__dirname, "failure.html"));
+});
+
+app.get("/pending", (req, res) => {
+  res.sendFile(path.join(__dirname, "pending.html"));
 });
 
 app.listen(PORT, () => {

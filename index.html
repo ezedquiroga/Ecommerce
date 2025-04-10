@@ -20,8 +20,17 @@
   <body>
     <header class="bg-pink-400 py-4">
       <div class="container mx-auto flex justify-between items-center">
-        <button id="botonCarrito" class="text-pink-800 hover:text-white">
-          🛒 Carrito
+        <button id="botonCarrito" class="text-pink-800 hover:text-white flex items-center">
+          <span class="mr-1">🛒</span>
+          <span class="relative">
+            Carrit<span class="inline-block relative">
+              o
+              <span id="carritoCantidad"
+                class="absolute -top-3 left-3 bg-pink-700 text-white text-xs w-5 h-5 rounded-full text-center leading-[1.25rem]">
+                0
+              </span>
+            </span>
+          </span>
         </button>
       </div>
     </header>
@@ -42,6 +51,8 @@
       <div>
         <h2>Mis productos</h2>
         <ul id="carritoItems"></ul>
+        <p id="totalCarrito"></p>
+        <button id="botonCheckout">Comprar</button>
         <button id="cerrarCarrito">Cerrar</button>
       </div>
     </aside>
