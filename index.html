@@ -20,16 +20,10 @@
   <body>
     <header class="bg-pink-400 py-4">
       <div class="container mx-auto flex justify-between items-center">
-        <button id="botonCarrito" class="text-pink-800 hover:text-white flex items-center">
-          <span class="mr-1">🛒</span>
-          <span class="relative">
-            Carrit<span class="inline-block relative">
-              o
-              <span id="carritoCantidad"
-                class="absolute -top-3 left-3 bg-pink-700 text-white text-xs w-5 h-5 rounded-full text-center leading-[1.25rem]">
-                0
-              </span>
-            </span>
+        <button id="botonCarrito" class="text-pink-800 hover:text-white relative">
+          🛒Carrito
+          <span id="contadorCarrito" class="absolute -top-2 -right-4 bg-pink-700 text-white text-xs font-bold px-2 rounded-full">
+            0
           </span>
         </button>
       </div>
@@ -52,12 +46,15 @@
         <h2>Mis productos</h2>
         <ul id="carritoItems"></ul>
         <p id="totalCarrito"></p>
-        <button id="botonCheckout">Comprar</button>
+        <button id="botonCheckoutAside">Comprar</button>
         <button id="cerrarCarrito">Cerrar</button>
       </div>
     </aside>
 
     <!-- Botón de pago con MercadoPago -->
-    <button id="checkoutButton" class="btn-checkout">Comprar Todo</button>
+    <button id="botonCheckoutGlobal" class="btn-checkout">Comprar Todo</button>
   </body>
+  <footer>
+    <a href="login.html" class="text-sm text-pink-800 hover:underline">Admin</a>
+  </footer>
 </html>

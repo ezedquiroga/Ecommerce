@@ -1,0 +1,12 @@
+[
+  {
+    "titulo": "Vela",
+    "precio": 5000,
+    "imagen": "/assets/img/1744328705424-imagen1.jpeg"
+  },
+  {
+    "titulo": "Vela 2",
+    "precio": 3000,
+    "imagen": "/assets/img/1744331133891-imagen3.jpeg"
+  }
+]

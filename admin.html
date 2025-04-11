@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administrador - Cargar productos</title>
+  <script>
+    if (localStorage.getItem("adminAutenticado") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 400px;
+    }
+
+    input[type="text"], input[type="number"], input[type="file"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cargar nuevo producto</h1>
+
+  <form id="formProducto" enctype="multipart/form-data">
+    <input type="text" name="titulo" placeholder="Título del producto" required />
+    <input type="number" name="precio" placeholder="Precio" required />
+    <input type="file" name="imagen" accept="image/*" required />
+    <button type="submit">Cargar producto</button>
+  </form>
+
+  <p id="mensaje"></p>
+
+  <script>
+    document.getElementById("formProducto").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch("/api/productos", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+        document.getElementById("mensaje").textContent = "✅ Producto cargado correctamente";
+
+        form.reset();
+      } catch (error) {
+        console.error("Error al enviar producto:", error);
+        document.getElementById("mensaje").textContent = "❌ Error al cargar el producto";
+      }
+    });
+  </script>
+
+  <button id="logoutBtn">Cerrar sesión</button>
+
+  <script>
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("adminAutenticado");
+      window.location.href = "login.html"
+    });
+  </script>
+</body>
+</html>

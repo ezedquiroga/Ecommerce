@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login Admin</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    form { display: flex; flex-direction: column; max-width: 300px; gap: 1rem; }
+  </style>
+</head>
+<body>
+  <h2>Acceso administrador</h2>
+  <form id="loginForm">
+    <input type="text" name="usuario" placeholder="Usuario" required />
+    <input type="password" name="password" placeholder="Contraseña" required />
+    <button type="submit">Ingresar</button>
+  </form>
+
+  <p id="mensaje"></p>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const datos = new FormData(form);
+      const usuario = datos.get("usuario");
+      const password = datos.get("password");
+
+      if (usuario === "admin" && password === "1234") {
+        localStorage.setItem("adminAutenticado", "true");
+        window.location.href = "admin.html";
+      } else {
+        mensaje.textContent = "❌ Usuario o contraseña incorrectos";
+      }
+    });
+  </script>
+</body>
+</html>

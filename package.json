@@ -13,7 +13,10 @@
     "body-parse": "^0.1.0",
     "cors": "^2.8.5",
     "express": "^4.21.0",
-    "mercadopago": "^1.5.13"
+    "fs": "^0.0.1-security",
+    "mercadopago": "1.5.13",
+    "multer": "^1.4.5-lts.2",
+    "path": "^0.12.7"
   },
   "description": ""
 }
