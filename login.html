@@ -19,6 +19,10 @@
   <p id="mensaje"></p>
 
   <script>
+    // Usuario y contraseña
+    const USUARIO_VALIDO = "Arthy";
+    const   CONRASENA_VALIDA = "joyas2025";
+
     const form = document.getElementById("loginForm");
     const mensaje = document.getElementById("mensaje");
 
@@ -28,7 +32,7 @@
       const usuario = datos.get("usuario");
       const password = datos.get("password");
 
-      if (usuario === "admin" && password === "1234") {
+      if (usuario === USUARIO_VALIDO && password === CONRASENA_VALIDA) {
         localStorage.setItem("adminAutenticado", "true");
         window.location.href = "admin.html";
       } else {
