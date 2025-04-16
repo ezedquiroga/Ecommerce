@@ -1,84 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Administrador - Cargar productos</title>
-  <script>
-    if (localStorage.getItem("adminAutenticado") !== "true") {
-      window.location.href = "login.html";
-    }
-  </script>
+  <title>Panel de administración</title>
   <style>
     body {
       font-family: sans-serif;
       padding: 2rem;
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 400px;
+    form,
+    table {
+      margin-bottom: 2rem;
     }
 
-    input[type="text"], input[type="number"], input[type="file"] {
-      padding: 0.5rem;
-      font-size: 1rem;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eee;
     }
 
     button {
-      padding: 0.75rem;
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      cursor: pointer;
+      margin: 0 5px;
     }
   </style>
 </head>
-<body>
-  <h1>Cargar nuevo producto</h1>
 
+<body>
+  <h1>Administración de productos</h1>
+
+  <!-- Formulario para agregar/editar producto -->
   <form id="formProducto" enctype="multipart/form-data">
-    <input type="text" name="titulo" placeholder="Título del producto" required />
+    <input type="hidden" name="modo" value="crear" />
+    <input type="hidden" name="indice" value="" />
+    <input type="text" name="titulo" placeholder="Título" required />
     <input type="number" name="precio" placeholder="Precio" required />
-    <input type="file" name="imagen" accept="image/*" required />
-    <button type="submit">Cargar producto</button>
+    <input type="file" name="imagen" accept="image/*" />
+    <button type="submit">Guardar producto</button>
   </form>
 
-  <p id="mensaje"></p>
-
-  <script>
-    document.getElementById("formProducto").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const form = e.target;
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch("/api/productos", {
-          method: "POST",
-          body: formData
-        });
-
-        const result = await response.json();
-        document.getElementById("mensaje").textContent = "✅ Producto cargado correctamente";
-
-        form.reset();
-      } catch (error) {
-        console.error("Error al enviar producto:", error);
-        document.getElementById("mensaje").textContent = "❌ Error al cargar el producto";
-      }
-    });
-  </script>
+  <h2>Productos existentes</h2>
+  <table id="tablaProductos">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Título</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <button id="logoutBtn">Cerrar sesión</button>
 
   <script>
+    // 🔐 Redirección si no está logueado
+    if (localStorage.getItem("adminAutenticado") !== "true") {
+      window.location.href = "login.html";
+    }
+
+    const form = document.getElementById("formProducto");
+    const tabla = document.querySelector("#tablaProductos tbody");
+
+    // 🚀 Mostrar productos en tabla
+    function cargarProductos() {
+      fetch("/api/productos")
+        .then(res => res.json())
+        .then(productos => {
+          tabla.innerHTML = "";
+          productos.forEach((p, i) => {
+            const tr = document.createElement("tr");
+
+            const tdImg = document.createElement("td");
+            const img = document.createElement("img");
+            img.src = p.imagen;
+            img.style.width = "60px";
+            tdImg.appendChild(img);
+
+            const tdTitulo = document.createElement("td");
+            tdTitulo.textContent = p.titulo;
+
+            const tdPrecio = document.createElement("td");
+            tdPrecio.textContent = `$${p.precio}`;
+
+            const tdAcciones = document.createElement("td");
+            const btnEditar = document.createElement("button");
+            btnEditar.textContent = "Editar";
+            btnEditar.addEventListener("click", () => {
+              form.modo.value = "editar";
+              form.indice.value = i;
+              form.titulo.value = p.titulo;
+              form.precio.value = p.precio;
+            });
+
+            const btnEliminar = document.createElement("button");
+            btnEliminar.textContent = "Eliminar";
+            btnEliminar.addEventListener("click", () => {
+              if (confirm("¿Estás seguro de eliminar este producto?")) {
+                fetch(`/api/productos/${i}`, {
+                  method: "DELETE"
+                })
+                  .then(() => cargarProductos());
+              }
+            });
+
+            tdAcciones.appendChild(btnEditar);
+            tdAcciones.appendChild(btnEliminar);
+
+            tr.appendChild(tdImg);
+            tr.appendChild(tdTitulo);
+            tr.appendChild(tdPrecio);
+            tr.appendChild(tdAcciones);
+
+            tabla.appendChild(tr);
+          });
+        });
+    }
+
+    // 📝 Guardar producto (nuevo o editado)
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const modo = form.modo.value;
+      const indice = form.indice.value;
+
+      const datos = new FormData(form);
+
+      console.log("Enviando datos del formulario...");
+      console.log("Archivo seleccionado:", datos.get("imagen"));
+      console.log("titulos:", datos.get("titulo"));
+      console.log("Precio:", datos.get("precio"));
+
+      const url = "/api/productos";
+      const metodo = "POST";
+
+      if (modo === "editar") {
+        datos.append("editar", "true"); // indicamos al backend que es edición
+        datos.append("index", indice);  // le pasamos el índice a editar
+      }
+
+      fetch(url, {
+        method: metodo,
+        body: datos
+      })
+        .then(async res => {
+          const data = await res.json().catch(() => null);
+          console.log("Respuesta del servidor:", data);
+
+          if (!res.ok) {
+            const mensaje = data?.error || "Error desconocido del servidor";
+            alert("❌ " + mensaje);
+          } else {
+            alert("✅ Producto guardado correctamente");
+            form.reset();
+            form.modo.value = "crear";
+            cargarProductos();
+          }
+        })
+        .catch(err => {
+          alert("🌐 Error de conexión con el servidor");
+          console.error("Error en fetch:", err);
+        });
+    });
+
+    // 🔐 Cerrar sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("adminAutenticado");
-      window.location.href = "login.html"
+      window.location.href = "index.html";
     });
+
+    cargarProductos();
   </script>
 </body>
+
 </html>
