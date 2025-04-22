@@ -31,8 +31,8 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     const error = new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname);
-    error.message = "⚠️ Tipo de archivo o permitido. Solo se aceptan imágenes JPG, PNG o GIF.";
-    cb(Error);
+    error.message = "⚠️ Tipo de archivo no permitido. Solo se aceptan imágenes JPG, PNG o GIF.";
+    cb(error); // Pasar el error al callback
   }
 };
 
@@ -59,10 +59,17 @@ app.get("/api/productos", (req, res) => {
 // ➕ Crear producto
 app.post("/api/productos", (req, res) => {
   upload.single("imagen")(req, res, (err) => {
-    console.log("Error recibido:", err);
-    if (err instanceof multer.MulterError || err) {
-      // Error de multer, como tamaño excesivo
-      return res.status(400).json({ error: err.message || "Error al subir la imagen" });
+    console.error("Error de Multer:", err); // Log del error en el servidor
+    if (err instanceof multer.MulterError) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ error: "❗ Tamaño de archivo muy grande. Límite: 2 MB." });
+      } else if (err.code === "LIMIT_UNEXPECTED_FILE") {
+        return res.status(400).json({ error: err.message });
+      } else {
+        return res.status(400).json({ error: "Error de carga: " + err.message });
+      }
+    } else if (err) {
+      return res.status(400).json({ error: "Error desconocido al subir la imagen." });
     }
 
     // Si no hubo errores, seguimos con la lógica normal
@@ -100,7 +107,7 @@ app.post("/api/productos", (req, res) => {
   });
 });
 
-// ✏️ Editar producto
+// ✏️ Editar producto (sin cambios significativos para este problema)
 app.put("/api/productos/:index", upload.single("imagen"), (req, res) => {
   const { index } = req.params;
   const { titulo, precio } = req.body;
@@ -124,7 +131,7 @@ app.put("/api/productos/:index", upload.single("imagen"), (req, res) => {
   });
 });
 
-// 🗑️ Eliminar producto
+// 🗑️ Eliminar producto (sin cambios significativos para este problema)
 app.delete("/api/productos/:index", (req, res) => {
   const { index } = req.params;
 
@@ -133,15 +140,14 @@ app.delete("/api/productos/:index", (req, res) => {
     const productos = JSON.parse(data);
     if (!productos[index]) return res.status(404).json({ error: "No encontrado" });
 
-const productoEliminado = productos.splice(index, 1)[0];
+    const productoEliminado = productos.splice(index, 1)[0];
 
-// Eliminar la imagen del sistema si existe
-if (productoEliminado.imagen && productoEliminado.imagen.startsWith("/assets/img/")) {
-  const rutaImagen = path.join(__dirname, productoEliminado.imagen);
-  fs.unlink(rutaImagen, (err) => {
-    if (err) console.error("No se pudo eliminar la imagen:", err.message);
-  });
-}
+    if (productoEliminado.imagen && productoEliminado.imagen.startsWith("/assets/img/")) {
+      const rutaImagen = path.join(__dirname, productoEliminado.imagen);
+      fs.unlink(rutaImagen, (err) => {
+        if (err) console.error("No se pudo eliminar la imagen:", err.message);
+      });
+    }
 
     fs.writeFile("productos.json", JSON.stringify(productos, null, 2), err => {
       if (err) return res.status(500).json({ error: "Error al guardar" });
@@ -150,7 +156,7 @@ if (productoEliminado.imagen && productoEliminado.imagen.startsWith("/assets/img
   });
 });
 
-// 🛒 Checkout con MercadoPago
+// 🛒 Checkout con MercadoPago (sin cambios significativos para este problema)
 let carrito = [];
 
 app.post("/cart/add", (req, res) => {
@@ -184,7 +190,7 @@ app.post("/checkout", async (req, res) => {
   }
 });
 
-// ▶️ Inicio del servidor
+// ▶️ Inicio del servidor (sin cambios significativos para este problema)
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

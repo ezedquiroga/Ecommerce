@@ -40,14 +40,17 @@
 <body>
   <h1>Administración de productos</h1>
 
-  <!-- Formulario para agregar/editar producto -->
   <form id="formProducto" enctype="multipart/form-data">
     <input type="hidden" name="modo" value="crear" />
     <input type="hidden" name="indice" value="" />
     <input type="text" name="titulo" placeholder="Título" required />
     <input type="number" name="precio" placeholder="Precio" required />
     <input type="file" name="imagen" accept="image/*" />
+    <small style="display: block; margin-top: 4px; color: #888;">
+      📌 Solo se permiten imágenes <strong>JPG, PNG o GIF</strong>. Tamaño máximo: <strong>2 MB</strong>.
+    </small>
     <button type="submit">Guardar producto</button>
+    <p id="uploadError" class="text-red-500 text-sm mt-2 hidden"></p>
   </form>
 
   <h2>Productos existentes</h2>
@@ -73,6 +76,7 @@
 
     const form = document.getElementById("formProducto");
     const tabla = document.querySelector("#tablaProductos tbody");
+    const uploadError = document.getElementById("uploadError"); // Obtener referencia al elemento de error
 
     // 🚀 Mostrar productos en tabla
     function cargarProductos() {
@@ -130,48 +134,44 @@
     }
 
     // 📝 Guardar producto (nuevo o editado)
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const modo = form.modo.value;
       const indice = form.indice.value;
-
       const datos = new FormData(form);
-
-      console.log("Enviando datos del formulario...");
-      console.log("Archivo seleccionado:", datos.get("imagen"));
-      console.log("titulos:", datos.get("titulo"));
-      console.log("Precio:", datos.get("precio"));
+      uploadError.classList.add("hidden"); // Oculta cualquier error previo
 
       const url = "/api/productos";
       const metodo = "POST";
 
       if (modo === "editar") {
-        datos.append("editar", "true"); // indicamos al backend que es edición
-        datos.append("index", indice);  // le pasamos el índice a editar
+        datos.append("editar", "true");
+        datos.append("index", indice);
       }
 
-      fetch(url, {
-        method: metodo,
-        body: datos
-      })
-        .then(async res => {
-          const data = await res.json().catch(() => null);
-          console.log("Respuesta del servidor:", data);
-
-          if (!res.ok) {
-            const mensaje = data?.error || "Error desconocido del servidor";
-            alert("❌ " + mensaje);
-          } else {
-            alert("✅ Producto guardado correctamente");
-            form.reset();
-            form.modo.value = "crear";
-            cargarProductos();
-          }
-        })
-        .catch(err => {
-          alert("🌐 Error de conexión con el servidor");
-          console.error("Error en fetch:", err);
+      try {
+        const res = await fetch(url, {
+          method: metodo,
+          body: datos
         });
+        const data = await res.json().catch(() => null);
+
+        console.log("Respuesta del servidor:", data);
+
+        if (!res.ok) {
+          const mensaje = data?.error || "Error desconocido del servidor";
+          alert("❌ " + mensaje);
+        } else {
+          alert("✅ Producto guardado correctamente");
+          form.reset();
+          form.modo.value = "crear";
+          cargarProductos();
+        }
+      }
+      catch (err) {
+      alert("🌐 Error de conexión con el servidor");
+      console.error("Error en fetch:", err);
+    }
     });
 
     // 🔐 Cerrar sesión

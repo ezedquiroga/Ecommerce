@@ -1,7 +1,7 @@
 [
   {
-    "titulo": "Velas",
-    "precio": 500,
+    "titulo": "Velaaaaa",
+    "precio": 50000,
     "imagen": "/assets/img/1744409845746-imagen3.jpeg"
   },
   {
@@ -23,5 +23,25 @@
     "titulo": "Vela",
     "precio": 500,
     "imagen": "/assets/img/1744768824528-946001368.jpeg"
+  },
+  {
+    "titulo": "a",
+    "precio": 15,
+    "imagen": "/assets/img/1745271440780-785716593.jpeg"
+  },
+  {
+    "titulo": "b",
+    "precio": 50,
+    "imagen": "/assets/img/1745271467275-727201351.jpeg"
+  },
+  {
+    "titulo": "V",
+    "precio": 900,
+    "imagen": "/assets/img/1745271521213-778432572.jpeg"
+  },
+  {
+    "titulo": "E",
+    "precio": 500,
+    "imagen": "/assets/img/1745271541727-501778482.jpeg"
   }
 ]
