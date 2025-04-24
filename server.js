@@ -172,17 +172,16 @@ app.post("/checkout", async (req, res) => {
   try {
     const preference = {
       items: carritoCliente.map(p => ({
-        title: p.nombre,
+        title: p.titulo,
         unit_price: Number(p.precio),
         quantity: p.cantidad
       })),
       back_urls: {
         success: "http://localhost:3000/success",
-        failure: "http://localhost:3000/failure"
+        failure: "http://localhost:3000/failure",
+        pending: "http://localhost:3000/pending"
       },
-      auto_return: "approved"
     };
-
     const response = await mercadopago.preferences.create(preference);
     res.json({ init_point: response.body.init_point });
   } catch (error) {

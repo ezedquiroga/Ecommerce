@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     carritoItems.innerHTML = "";
     carrito.forEach((producto, index) => {
       const li = document.createElement("li");
-      li.textContent = `${producto.nombre} - $${producto.precio} x${producto.cantidad}`;
+      li.textContent = `${producto.titulo} - $${producto.precio} x${producto.cantidad}`;
 
       const btnEliminar = document.createElement("button");
       btnEliminar.textContent = "❌";
@@ -127,10 +127,14 @@ function agregarEventosCarrito(productos) {
     btn.addEventListener("click", () => {
       const producto = productos[(paginaActual - 1) * productosPorPagina + i];
       const existente = carrito.find(p => p.titulo === producto.titulo);
+      const precioNumerico = parseFloat(producto.precio.toString().replace('$', '').replace('.', '').replace(',', ''));
       if (existente) {
         existente.cantidad++;
       } else {
-        carrito.push({ ...producto, cantidad: 1 });
+        carrito.push({
+          titulo: producto.titulo,
+          precio: precioNumerico,
+          cantidad: 1 });
       }
       guardarCarrito();
       mostrarCarrito();
