@@ -6,6 +6,7 @@ const mercadopago = require("mercadopago");
 
 const app = express();
 const PORT = 3000;
+const PRODUCTOS_JSON = path.join(__dirname, "productos.json");
 
 // 🛠️ Configuración MercadoPago
 mercadopago.configure({
@@ -189,6 +190,18 @@ app.post("/checkout", async (req, res) => {
     res.status(500).json({ error: "No se pudo iniciar el pago" });
   }
 });
+
+app.post("/api/productos/ordenar", (req, res) => {
+  const nuevosProductos = req.body;
+
+  fs.writeFile(PRODUCTOS_JSON, JSON.stringify(nuevosProductos, null, 2), err => {
+    if(err) {
+      return res.status(500).json({ error: "Error al guardar productos" });
+    }
+    res.json({ ok: true });
+  });
+});
+
 
 // ▶️ Inicio del servidor (sin cambios significativos para este problema)
 app.listen(PORT, () => {

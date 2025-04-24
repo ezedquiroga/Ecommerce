@@ -54,13 +54,13 @@
   </form>
 
   <h2>Productos existentes</h2>
-  <table id="tablaProductos">
+  <table id="tablaProductos" class="table-auto border border-gray-300 mx-auto">
     <thead>
       <tr>
         <th>Imagen</th>
         <th>Título</th>
         <th>Precio</th>
-        <th>Acciones</th>
+        <th class="text-center w-[130px]">Acciones</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -98,8 +98,10 @@
 
             const tdPrecio = document.createElement("td");
             tdPrecio.textContent = `$${p.precio}`;
-
             const tdAcciones = document.createElement("td");
+            tdAcciones.className = "text-center align-middle";
+
+            // Boton editar
             const btnEditar = document.createElement("button");
             btnEditar.textContent = "Editar";
             btnEditar.addEventListener("click", () => {
@@ -109,6 +111,7 @@
               form.precio.value = p.precio;
             });
 
+            // Boton eliminar
             const btnEliminar = document.createElement("button");
             btnEliminar.textContent = "Eliminar";
             btnEliminar.addEventListener("click", () => {
@@ -120,8 +123,20 @@
               }
             });
 
+            // Boton ⬆
+            const btnArriba = document.createElement("button");
+            btnArriba.textContent = "🔺";
+            btnArriba.addEventListener("click", () => moverProducto(i, -1));
+
+            // Boton ⬇
+            const btnAbajo = document.createElement("button");
+            btnAbajo.textContent = "🔻";
+            btnAbajo.addEventListener("click", () => moverProducto(i, 1));
+
             tdAcciones.appendChild(btnEditar);
             tdAcciones.appendChild(btnEliminar);
+            tdAcciones.appendChild(btnArriba);
+            tdAcciones.appendChild(btnAbajo);
 
             tr.appendChild(tdImg);
             tr.appendChild(tdTitulo);
@@ -131,6 +146,28 @@
             tabla.appendChild(tr);
           });
         });
+    }
+
+    function moverProducto(index, direccion) {
+      fetch("/api/productos")
+        .then(res => res.json())
+        .then(productos => {
+          const nuevoIndex = index + direccion;
+
+          if (nuevoIndex < 0 || nuevoIndex >= productos.length) return;
+
+          const temp = productos[index];
+          productos[index] = productos[nuevoIndex];
+          productos[nuevoIndex] = temp;
+
+          fetch("/api/productos/ordenar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(productos)
+          })
+            .then(() => cargarProductos())
+            .catch(err => console.error("Error al guardar nuevo orden:", err));
+      });
     }
 
     // 📝 Guardar producto (nuevo o editado)
