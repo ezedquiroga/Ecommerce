@@ -1,15 +1,5 @@
 [
   {
-    "titulo": "Velaaaaa",
-    "precio": 50000,
-    "imagen": "/assets/img/1744409845746-imagen3.jpeg"
-  },
-  {
-    "titulo": "V",
-    "precio": 1,
-    "imagen": "/assets/img/1745536240322-269140282.jpeg"
-  },
-  {
     "titulo": "Vela 2",
     "precio": 1500,
     "imagen": "/assets/img/1744734182128-1744328705424-imagen1.jpeg"
@@ -18,6 +8,11 @@
     "titulo": "Velita",
     "precio": 1000,
     "imagen": "/assets/img/1744734294704-imagen8.jpeg"
+  },
+  {
+    "titulo": "Velaaaaa",
+    "precio": 5000,
+    "imagen": "assets/img/1745631536441.jpeg"
   },
   {
     "titulo": "Velon",
@@ -38,5 +33,10 @@
     "titulo": "b",
     "precio": 500,
     "imagen": "/assets/img/1745536018674-779772236.jpeg"
+  },
+  {
+    "titulo": "nueva",
+    "precio": 56,
+    "imagen": "assets/img/1745631550766.jpeg"
   }
 ]

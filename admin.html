@@ -42,7 +42,7 @@
 
   <form id="formProducto" enctype="multipart/form-data">
     <input type="hidden" name="modo" value="crear" />
-    <input type="hidden" name="indice" value="" />
+    <input type="hidden" name="id" value="" />
     <input type="text" name="titulo" placeholder="Título" required />
     <input type="number" name="precio" placeholder="Precio" required />
     <input type="file" name="imagen" accept="image/*" />
@@ -106,7 +106,7 @@
             btnEditar.textContent = "Editar";
             btnEditar.addEventListener("click", () => {
               form.modo.value = "editar";
-              form.indice.value = i;
+              form.id.value = i;
               form.titulo.value = p.titulo;
               form.precio.value = p.precio;
             });
@@ -148,68 +148,68 @@
         });
     }
 
-    function moverProducto(index, direccion) {
-      fetch("/api/productos")
-        .then(res => res.json())
-        .then(productos => {
-          const nuevoIndex = index + direccion;
+    async function moverProducto(i, direccion) {
+      const nuevoIndex = i + direccion;
 
-          if (nuevoIndex < 0 || nuevoIndex >= productos.length) return;
+      const productos = await (await fetch("/api/productos")).json();
 
-          const temp = productos[index];
-          productos[index] = productos[nuevoIndex];
-          productos[nuevoIndex] = temp;
+      if (nuevoIndex >= 0 && nuevoIndex < productos.length) {
+        const res = await fetch("/api/productos/ordenar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ desde: i, hasta: nuevoIndex }),
+        });
 
-          fetch("/api/productos/ordenar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(productos)
-          })
-            .then(() => cargarProductos())
-            .catch(err => console.error("Error al guardar nuevo orden:", err));
-      });
+        const respuesta = await res.json();
+
+        if (respuesta.success) {
+          cargarProductos(); // vuelve a cargar la tabla
+        } else {
+          alert(respuesta.error || "Error al reordenar");
+        }
+     }
     }
 
     // 📝 Guardar producto (nuevo o editado)
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const modo = form.modo.value;
-      const indice = form.indice.value;
-      const datos = new FormData(form);
-      uploadError.classList.add("hidden"); // Oculta cualquier error previo
 
-      const url = "/api/productos";
-      const metodo = "POST";
+    // ⚠️ Capturamos primero el modo e ID
+    const modo = form.modo.value;
+    const id = form.id.value;
 
-      if (modo === "editar") {
-        datos.append("editar", "true");
-        datos.append("index", indice);
-      }
-
-      try {
-        const res = await fetch(url, {
-          method: metodo,
-          body: datos
-        });
-        const data = await res.json().catch(() => null);
-
-        console.log("Respuesta del servidor:", data);
-
-        if (!res.ok) {
-          const mensaje = data?.error || "Error desconocido del servidor";
-          alert("❌ " + mensaje);
-        } else {
-          alert("✅ Producto guardado correctamente");
-          form.reset();
-          form.modo.value = "crear";
-          cargarProductos();
-        }
-      }
-      catch (err) {
-      alert("🌐 Error de conexión con el servidor");
-      console.error("Error en fetch:", err);
+    // ⚠️ Creamos los datos DESPUÉS de haber cargado todo
+    const datos = new FormData();
+    datos.append("modo", modo);
+    datos.append("id", id);
+    datos.append("titulo", form.titulo.value);
+    datos.append("precio", form.precio.value);
+    if (form.imagen.files.length > 0) {
+      datos.append("imagen", form.imagen.files[0]);
     }
-    });
+
+    try {
+      const res = await fetch("/api/productos", {
+        method: "POST",
+        body: datos,
+      });
+
+      const respuesta = await res.json();
+
+      if (respuesta.error) {
+        alert(respuesta.error);
+      } else {
+        form.reset();
+        form.modo.value = "crear";
+        cargarProductos();
+      }
+    } catch (err) {
+      console.error("Error en fetch:", err);
+      alert("No se pudo contactar con el servidor. Revisa tu conexión o intenta más tarde.");
+    }
+  });
 
     // 🔐 Cerrar sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
