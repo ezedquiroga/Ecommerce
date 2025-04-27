@@ -5,11 +5,6 @@
     "imagen": "/assets/img/1744734182128-1744328705424-imagen1.jpeg"
   },
   {
-    "titulo": "Velita",
-    "precio": 1000,
-    "imagen": "/assets/img/1744734294704-imagen8.jpeg"
-  },
-  {
     "titulo": "Velaaaaa",
     "precio": 5000,
     "imagen": "assets/img/1745631536441.jpeg"
@@ -20,6 +15,16 @@
     "imagen": "/assets/img/1744750307149-imagen5.jpeg"
   },
   {
+    "titulo": "b",
+    "precio": 500,
+    "imagen": "/assets/img/1745536018674-779772236.jpeg"
+  },
+  {
+    "titulo": "Velita",
+    "precio": 1000,
+    "imagen": "/assets/img/1744734294704-imagen8.jpeg"
+  },
+  {
     "titulo": "Vela",
     "precio": 500,
     "imagen": "/assets/img/1744768824528-946001368.jpeg"
@@ -28,11 +33,6 @@
     "titulo": "EQ",
     "precio": 500,
     "imagen": "/assets/img/1745535670130-853215277.jpeg"
-  },
-  {
-    "titulo": "b",
-    "precio": 500,
-    "imagen": "/assets/img/1745536018674-779772236.jpeg"
   },
   {
     "titulo": "nueva",

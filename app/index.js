@@ -63,10 +63,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
+      const emailInput = document.getElementById("emailComprador");
+      const compradorEmail = emailInput ? emailInput.value.trim() : "";
+
+      if (!compradorEmail || !compradorEmail.includes("@")) {
+        alert("Por favor ingresa un correo electrónico válido antes de comprar.");
+        return;
+      }
+
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ carrito })
+        body: JSON.stringify({ carrito, compradorEmail }),
       });
 
       const data = await response.json();
@@ -97,7 +105,7 @@ function mostrarProductosPaginados(productos) {
     tarjeta.innerHTML = `
       <div class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full">
        <div class="relative w-full h-64">
-        <img src="${producto.imagen}" alt="${producto.titulo}" class="w-full h-full object-cover object-bottom rounded">
+        <img src="${producto.imagen}" alt="${producto.titulo}" class="w-full h-full object-cover object-bottom rounded producto-imagen">
 
         <!-- Texto superpuesto a la izquierda -->
         <div class="absolute bottom-0 left-0 bg-white bg-opacity-80 p-2 rounded-tr-xl max-w-[60%]">
@@ -191,10 +199,18 @@ function generarControlesPaginacion(totalProductos) {
     }
 
     try {
+      const emailInputAside = document.querySelector("#carritoAside #emailComprador");
+      const compradorEmail = emailInputAside ? emailInputAside.value.trim() : "";
+
+      if (!compradorEmail || !compradorEmail.includes("@")) {
+        alert("Por favor ingresa un correo electrónico válido antes de comprar.");
+        return;
+      }
+
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ carrito })
+        body: JSON.stringify({ carrito, compradorEmail }),
       });
 
       const data = await response.json();
@@ -206,6 +222,30 @@ function generarControlesPaginacion(totalProductos) {
     } catch (error) {
       console.error("Error en el checkout (aside):", error);
       alert("Error al conectar con el servidor");
+    }
+  });
+
+  // Modal para ampliar imagen
+  const modalImagen = document.getElementById('modalImagen');
+  const imagenAmpliada = document.getElementById('imagenAmpliada');
+  const cerrarModal = document.getElementById('cerrarModal');
+
+  // Asignar evento click a cada imagen
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('producto-imagen')) {
+      imagenAmpliada.src = e.target.src;
+      modalImagen.classList.remove('hidden');
+    }
+  });
+
+  // Cerrar modal
+  cerrarModal.addEventListener('click', () => {
+    modalImagen.classList.add('hidden');
+  });
+
+  modalImagen.addEventListener('click', (e) => {
+    if (e.target === modalImagen) {
+      modalImagen.classList.add('hidden');
     }
   });
 

@@ -1,5 +1,6 @@
 const express = require("express");
 const mercadopago = require("mercadopago");
+const {enviarEmails} = require("./email");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ mercadopago.configure({
 });
 
 router.post("/checkout", async (req, res) => {
-  const carritoCliente = req.body.carrito;
+  const { carrito: carritoCliente, compradorEmail } = req.body;
 
   try {
     const preference = {
@@ -26,7 +27,13 @@ router.post("/checkout", async (req, res) => {
     };
 
     const response = await mercadopago.preferences.create(preference);
+
+    // Enviar email
+    const idTransaccion = Date.now();
+    await enviarEmails(carritoCliente, compradorEmail, idTransaccion);
+
     res.json({ init_point: response.body.init_point });
+
   } catch (error) {
     console.error("Error al crear preferencia:", error);
     res.status(500).json({ error: "No se pudo iniciar el pago" });

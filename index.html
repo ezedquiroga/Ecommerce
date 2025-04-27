@@ -49,6 +49,10 @@
           <button id="botonCheckoutGlobal" class="btn-checkout bg-pink-600 text-white px-4 py-2 rounded shadow hover:bg-pink-700">
             Comprar Todo
           </button>
+          <div id="emailSection" class="mt-4 flex flex-col items-start">
+            <label for="emailComprador" class="text-sm mb-1">Ingrese su email para recibir la confirmación de compra:</label>
+            <input id="emailComprador" type="email" placeholder="tu@email.com" class="border px-2 py-1 rounded w-full sm:w-1/2" required/> 
+          </div>
         </div>
       </div>
     </section>
@@ -58,16 +62,19 @@
   </main>
 
   <!-- Sidebar del carrito -->
-  <aside id="carritoAside"
-    class="fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-lg z-50 hidden overflow-y-auto p-4">
+  <aside id="carritoAside" class="aside-carrito oculto">
     <div>
-      <h2 class="text-xl font-bold mb-4">Mis productos</h2>
-      <ul id="carritoItems" class="space-y-2"></ul>
+      <h2 class="text-xl font-semibold mb-2">Mis productos</h2>
+      <ul id="carritoItems" class="mb-4"></ul>
+      <div id="emailSection" class="mt-4 flex flex-col items-start">
+        <label for="emailComprador" class="text-sm mb-1">Ingrese su email para recibir la confirmación de compra:</label>
+        <input id="emailComprador" type="email" placeholder="tu@email.com" class="border px-2 py-1 rounded w-full sm:w-52 mb-2" required/> 
+      </div>
       <p id="totalCarrito" class="mt-4 font-semibold"></p>
       <div class="flex gap-2 mt-4">
         <button id="botonCheckoutAside"
-          class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Comprar</button>
-        <button id="cerrarCarrito" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cerrar</button>
+          class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 mb-4">Comprar</button>
+        <button id="cerrarCarrito" class="bg-gray-400 px-4 py-2 rounded hover:bg-gray-600">Cerrar</button>
       </div>
     </div>
   </aside>
@@ -81,10 +88,17 @@
     
     </a>
     </span>
+  <footer class="mt-12 py-6">
+    <a href="login.html" class="text-sm text-pink-800 hover:underline fixed bottom-4 right-4 z-40">Admin</a>
+  </footer>
+  
+  <!-- Modal para ampliar imagen -->
+  <div id="modalImagen" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="relative bg-white rounded p-4 max-w-2xl mx-auto">
+      <button id="cerrarModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
+      <img id="imagenAmpliada" src="" alt="Imagen ampliada" class="max-w-full max-h-[80vh] rounded">
+    </div>
+  </div>
 </body>
 <div class="mb-24"></div>
-<footer class="mt-12 py-6">
-  <a href="login.html" class="text-sm text-pink-800 hover:underline fixed bottom-4 right-4 z-40">Admin</a>
-</footer>
-
 </html>
